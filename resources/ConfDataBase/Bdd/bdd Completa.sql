@@ -23,7 +23,7 @@ CREATE TABLE acometidas (
     numcuenta VARCHAR(255) UNIQUE NOT NULL,
     no_medidor VARCHAR(255) UNIQUE NOT NULL,
     clave VARCHAR(255) UNIQUE NOT NULL,
-    ruta VARCHAR(255) UNIQUE NOT NULL,
+    ruta VARCHAR(255) NOT NULL,
     direccion VARCHAR(255) UNIQUE NOT NULL
 );
 
@@ -44,29 +44,8 @@ CREATE TABLE aapplectura (
     observacion TEXT,
     lecturaanterior INTEGER NOT NULL,
     consumo INTEGER NOT NULL,
-    login VARCHAR(255) NOT NULL,
-    estado VARCHAR(1) NOT NULL,
-    valor FLOAT8 NOT NULL,
-    fechalectura TIMESTAMP NOT NULL,
-    num_emi INTEGER NOT NULL,
-    fecha_emi TIMESTAMP NOT NULL,
-    fecha_valor TIMESTAMP NOT NULL,
-    cam_med INTEGER NOT NULL,
-    pago_anterior FLOAT8 NOT NULL,
-    consumocalculo INTEGER NOT NULL,
-    consumo_cabildo INTEGER NOT NULL,
-    consumomedidor INTEGER NOT NULL,
-    consumo_0 INTEGER NOT NULL,
-    lect_0 FLOAT8,
     nromedidor VARCHAR(255),
-    ciu INTEGER NOT NULL, 
-    tarifa INTEGER NOT NULL,
-    alcant_lect VARCHAR(255) NOT NULL,
-    ruta_lect INTEGER NOT NULL,
-    novedad INTEGER NOT NULL,
-    valor_alcant FLOAT8 NOT NULL,
-    valor_msap FLOAT8 NOT NULL,
-    valor_sta FLOAT8 NOT NULL
+    ciu INTEGER NOT NULL
 );
 
 CREATE TABLE aapMovilLectura (

@@ -22,9 +22,9 @@ INSERT INTO ciudadano (nombreCompleto) VALUES
 
 INSERT INTO acometidas (numcuenta, no_medidor, clave, ruta, direccion) VALUES
 ('12345', 'M12345', 'CLAVE123', 'Ruta Norte', 'Calle Principal 123'),
-('67890', 'M67890', 'CLAVE678', 'Ruta Sur', 'Avenida Central 456'),
-('54321', 'M54321', 'CLAVE543', 'Ruta Este', 'Calle Secundaria 789'),
-('98765', 'M98765', 'CLAVE987', 'Ruta Oeste', 'Avenida Libertad 101'),
+('67890', 'M67890', 'CLAVE678', 'Ruta Norte', 'Avenida Central 456'),
+('54321', 'M54321', 'CLAVE543', 'Ruta Sur', 'Calle Secundaria 789'),
+('98765', 'M98765', 'CLAVE987', 'Ruta Sur', 'Avenida Libertad 101'),
 ('24680', 'M24680', 'CLAVE246', 'Ruta Centro', 'Plaza Mayor 222'),
 ('13579', 'M13579', 'CLAVE135', 'Ruta Periférica', 'Calle Rural 333');
 
@@ -44,6 +44,3 @@ INSERT INTO aapMovilLectura (cuenta, medidor, clave, abonado, lectura, observaci
 ('98765', 'M98765', 'CLAVE987', 'Ana López', '3456', 'Medidor dañado', '-0.945758,-78.619934,2850'),
 ('24680', 'M24680', 'CLAVE246', 'Luis Martínez', '7890', 'Sin novedad', '-0.945758,-78.619934,2850'),
 ('13579', 'M13579', 'CLAVE135', 'Laura Sánchez', '2345', 'Sin novedad', '-0.945758,-78.619934,2850');
-
-
-
