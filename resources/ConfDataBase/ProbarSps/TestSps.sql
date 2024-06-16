@@ -1,12 +1,12 @@
 --Probar sp Validar_usuario
-SELECT validar_usuario('usuario1', 'contrasena1'); 
+SELECT validar_usuario('usuario1', 'contrasena1');
 
 --Probar sp UsuarioRutaSp
 -- Obtener la ruta asignada a ese id del usuario 
 SELECT * FROM UsuarioRuta(1); 
 
 --Probar SpRutaLecturaMovilz
--- Obtener datos para la ruta con ID 1
+-- Obtener informacion de acometidas relacionadas con id del usuario
 SELECT * FROM RutaLecturaMovil(1);
 
 --Probar spSincronizarLecturas

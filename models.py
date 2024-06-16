@@ -1,31 +1,19 @@
 from pydantic import BaseModel
 
-# Modelo para los parámetros del procedimiento SincronizarLecturas
-class Lectura(BaseModel):
-    numcuenta: str
-    no_medidor: str
-    clave: str
-    ruta: str
-    lectura: int
-    observacion: str
-    login: str
-    coordenadasxyz:str
-
-# Modelo para los parámetros de la función validar_usuario
-class Usuario(BaseModel):
+class LoginCredentials(BaseModel):
     nombre_usuario: str
     contrasena: str
 
+class UsuarioRutaResult(BaseModel):
+    nombre_ruta: str
+    nombre_usuario: str
+    id_usuario: int
+    id_ruta: int
 
-# Modelo para el resultado de la función UsuarioRuta
-class UsuarioRutaOutput(BaseModel):
-    idruta: int
-    nombreruta: str
-
-# Modelo para el resultado de la función RutaLecturaMovil
-class RutaLecturaMovilOutput(BaseModel):
+class RutaLecturaMovilResult(BaseModel):
     numcuenta: str
     no_medidor: str
     clave: str
     ruta: str
+    direccion: str
     abonado: str

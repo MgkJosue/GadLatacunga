@@ -1,75 +1,100 @@
-from fastapi import FastAPI, Depends, HTTPException, status
+from fastapi import FastAPI, HTTPException, status,Request
+from database import  database
+from models import LoginCredentials, UsuarioRutaResult, RutaLecturaMovilResult
+from sqlalchemy import text, bindparam
+from sqlalchemy.exc import SQLAlchemyError
 from fastapi.responses import JSONResponse
-import sqlalchemy
-from sqlalchemy import text, exc
-from sqlalchemy.orm import Session
-from typing import List
-from database import database, engine
-from models import Lectura, Usuario, UsuarioRutaOutput, RutaLecturaMovilOutput
 
 app = FastAPI()
 
-# Dependencia para conectar a la base de datos
-async def get_db():
-    async with database:
-        yield database
-
-# Endpoint para validar_usuario
-@app.post("/usuarios/validar/")
-async def validar_usuario(usuario: Usuario, db: Session = Depends(get_db)):
-    # Consulta SQL con parámetros
-    query = sqlalchemy.text("SELECT validar_usuario(:p_nombre_usuario, :p_contrasena)")
-
-    # Parametros en un diccionario
-    values = {"p_nombre_usuario": usuario.nombre_usuario, "p_contrasena": usuario.contrasena}
-
-    # Usar bindparam para pasar los parámetros de forma segura
-    result = await db.fetch_val(query.bindparams(**values))
-
-    if result:
-        return {"message": "Usuario válido"}
-    else:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Credenciales inválidas")
+@app.on_event("startup")
+async def startup():
+    await database.connect()
 
 
-# Endpoint para UsuarioRuta (modificado a GET)
-@app.get("/usuarios/{idusuario}/rutas/", response_model=List[UsuarioRutaOutput])
-async def usuario_ruta(idusuario: int, db: Session = Depends(get_db)):
-    rows = await db.fetch_all(
-        text("SELECT * FROM UsuarioRuta(:idusuario)").bindparams(idusuario=idusuario)  # Usar bindparams() aquí
+@app.on_event("shutdown")
+async def shutdown():
+    await database.disconnect()
+
+@app.exception_handler(SQLAlchemyError)
+async def sqlalchemy_exception_handler(request: Request, exc: SQLAlchemyError):
+    # Manejar excepciones relacionadas con la base de datos (SQLAlchemy)
+    error_message = "Error en la base de datos"  
+    return JSONResponse(
+        status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        content={"detail": error_message},
     )
-    return [UsuarioRutaOutput(**row) for row in rows]
 
-# Endpoint para RutaLecturaMovil (modificado a GET)
-@app.get("/rutas/{idruta}/lecturas/", response_model=List[RutaLecturaMovilOutput])
-async def ruta_lectura_movil(idruta: int, db: Session = Depends(get_db)):
-    rows = await db.fetch_all(
-        text("SELECT * FROM RutaLecturaMovil(:idruta)").bindparams(idruta=idruta)   # Usar bindparams() aquí
+
+@app.exception_handler(HTTPException)
+async def http_exception_handler(request: Request, exc: HTTPException):
+    # Manejar excepciones HTTP estándar de FastAPI (404, 401, etc.)
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"detail": exc.detail},
     )
-    return [RutaLecturaMovilOutput(**row) for row in rows]
 
 
-#Endpoint para SincronizarLecturas (modificado a PUT)
-@app.put("/sincronizarLecturas/", status_code=status.HTTP_200_OK)
-async def sincronizar_lectura(lectura: Lectura, db: Session = Depends(get_db)):
+@app.post("/login/")
+async def login(credentials: LoginCredentials):
     try:
-        await db.execute(
-            text(
-                """CALL SincronizarLecturas(:numcuenta, :no_medidor, :clave, :ruta, :lectura, :observacion, :login, :coordenadasxyz)"""
-            ).bindparams(  # Usar bindparams() aquí
-                numcuenta=lectura.numcuenta,
-                no_medidor=lectura.no_medidor,
-                clave=lectura.clave,
-                ruta=lectura.ruta,
-                lectura=str(lectura.lectura),  
-                observacion=lectura.observacion,
-                login=lectura.login,
-                coordenadasxyz= lectura.coordenadasxyz
+        query = text("SELECT validar_usuario(:nombre_usuario, :contrasena)").bindparams(
+            bindparam("nombre_usuario", credentials.nombre_usuario),
+            bindparam("contrasena", credentials.contrasena)
+        )
+        result = await database.fetch_one(query)
+
+        if result is None:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED, detail="Credenciales incorrectas"
             )
-        )
-        return {"message": "Lectura sincronizada"}
-    except exc.DatabaseError as e:
+
+        is_valid, user_id = result[0]
+
+        if is_valid:
+            return {"mensaje": "Inicio de sesión exitoso", "usuario_id": user_id}
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED, detail="Credenciales incorrectas"
+            )
+    except SQLAlchemyError as e:
+        # Captura cualquier error de SQLAlchemy
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Error en la base de datos: {e}",
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error en la base de datos"
+        ) from e  # Reenviamos la excepción original para debugging
+
+
+
+@app.get("/usuario_ruta/{usuario_id}", response_model=list[UsuarioRutaResult])
+async def obtener_ruta_usuario(usuario_id: int):
+    try:
+        query = text("SELECT * FROM UsuarioRuta(:usuario_id)").bindparams(
+            bindparam("usuario_id", usuario_id)
         )
+        result = await database.fetch_all(query)
+        if not result:
+            raise HTTPException(status_code=404, detail="No se encontraron rutas para este usuario")
+        return result
+    except SQLAlchemyError as e:
+        # Captura cualquier error de SQLAlchemy
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error en la base de datos"
+        ) from e
+
+
+
+@app.get("/ruta_lectura/{usuario_id}", response_model=list[RutaLecturaMovilResult])
+async def obtener_ruta_lectura(usuario_id: int):
+    try:
+        query = text("SELECT * FROM RutaLecturaMovil(:usuario_id)").bindparams(
+            bindparam("usuario_id", usuario_id)
+        )
+        result = await database.fetch_all(query)
+        if not result:
+            raise HTTPException(status_code=404, detail="No se encontraron lecturas para este usuario")
+        return result
+    except SQLAlchemyError as e:
+        # Captura cualquier error de SQLAlchemy
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error en la base de datos"
+        ) from e 
