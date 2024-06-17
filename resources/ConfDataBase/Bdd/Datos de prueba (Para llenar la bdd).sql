@@ -54,3 +54,9 @@ INSERT INTO aapplectura (id, numcuenta, anio, mes, lectura, observacion, lectura
 (5, '67890', 2024, 2, 510, 'Sin observaciones', 500, 10, 'M67890', 2),
 (6, '24680', 2024, 1, 400, 'Sin observaciones', 390, 10, 'M24680', 3),
 (7, '24680', 2024, 2, 410, 'Sin observaciones', 400, 10, 'M24680', 3);
+(8, '54321', 2024, 1, 150, 'Sin observaciones', 140, 10, 'M54321', 3),
+(9, '54321', 2024, 2, 160, 'Sin observaciones', 150, 10, 'M54321', 3),
+(10, '98765', 2024, 1, 300, 'Sin observaciones', 290, 10, 'M98765', 4),
+(11, '98765', 2024, 2, 310, 'Sin observaciones', 300, 10, 'M98765', 4),
+(12, '13579', 2024, 1, 250, 'Sin observaciones', 240, 10, 'M13579', 6),
+(13, '13579', 2024, 2, 260, 'Sin observaciones', 250, 10, 'M13579', 6);
