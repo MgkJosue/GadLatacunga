@@ -48,6 +48,7 @@ CREATE TABLE aapplectura (
     ciu INTEGER NOT NULL
 );
 
+-- Crear la tabla aapMovilLectura
 CREATE TABLE aapMovilLectura (
     id SERIAL PRIMARY KEY,
     cuenta VARCHAR(20),
@@ -56,5 +57,6 @@ CREATE TABLE aapMovilLectura (
     abonado VARCHAR(100),
     lectura VARCHAR(10),
     observacion TEXT,
-    coordenadasXYZ VARCHAR(50)  -- Almacenamos las coordenadas XYZ en un solo campo
+    coordenadasXYZ VARCHAR(50),
+    direccion VARCHAR(255)
 );
