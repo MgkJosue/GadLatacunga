@@ -44,3 +44,13 @@ INSERT INTO aapMovilLectura (cuenta, medidor, clave, abonado, lectura, observaci
 ('98765', 'M98765', 'CLAVE987', 'Ana López', '3456', 'Medidor dañado', '-0.945758,-78.619934,2850'),
 ('24680', 'M24680', 'CLAVE246', 'Luis Martínez', '7890', 'Sin novedad', '-0.945758,-78.619934,2850'),
 ('13579', 'M13579', 'CLAVE135', 'Laura Sánchez', '2345', 'Sin novedad', '-0.945758,-78.619934,2850');
+
+
+INSERT INTO aapplectura (id, numcuenta, anio, mes, lectura, observacion, lecturaanterior, consumo, nromedidor, ciu) VALUES
+(1, '12345', 2024, 1, 200, 'Sin observaciones', 190, 10, 'M12345', 1),
+(2, '12345', 2024, 2, 210, 'Sin observaciones', 200, 10, 'M12345', 1),
+(3, '12345', 2024, 3, 220, 'Sin observaciones', 210, 10, 'M12345', 1),
+(4, '67890', 2024, 1, 500, 'Sin observaciones', 490, 10, 'M67890', 2),
+(5, '67890', 2024, 2, 510, 'Sin observaciones', 500, 10, 'M67890', 2),
+(6, '24680', 2024, 1, 400, 'Sin observaciones', 390, 10, 'M24680', 3),
+(7, '24680', 2024, 2, 410, 'Sin observaciones', 400, 10, 'M24680', 3);
