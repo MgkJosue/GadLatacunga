@@ -4,3 +4,4 @@ uvicorn
 databases[postgresql]
 sqlalchemy
 pydantic
+psycopg2

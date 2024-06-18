@@ -36,8 +36,6 @@ INSERT INTO aapplectorruta (idusuario, idruta) VALUES
 (1, 3), -- Lector 1 asignado a Ruta Este
 (2, 2), -- Lector 2 asignado a Ruta Sur
 (2, 4), -- Lector 2 asignado a Ruta Oeste
-(1, 5),
-(2, 6);
 
 -- Insertar datos en la tabla aapMovilLectura
 INSERT INTO aapMovilLectura (cuenta, medidor, clave, abonado, lectura, observacion, coordenadasXYZ, direccion) VALUES

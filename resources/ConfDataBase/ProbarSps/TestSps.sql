@@ -23,3 +23,15 @@ BEGIN
 
     CALL SincronizarLecturasMasivas(1, lecturas);
 END $$;
+
+--Funcion para obtenerUsuarios
+SELECT * FROM ObtenerUsuarios();
+
+--Funcion para obtenerRutas
+SELECT * FROM ObtenerRutas();
+
+-- Asignar la ruta con ID 1 al usuario con ID 5
+CALL AsignarRutaAUsuario(1, 5);
+
+-- Eliminar la asignación de la ruta con ID 1 al usuario con ID 2
+CALL  EliminarAsignacionDeRuta(1, 2);
