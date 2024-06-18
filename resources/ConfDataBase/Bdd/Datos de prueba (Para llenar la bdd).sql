@@ -39,9 +39,6 @@ INSERT INTO aapplectorruta (idusuario, idruta) VALUES
 (1, 5),
 (2, 6);
 
--- Añadir la columna direccion a la tabla aapMovilLectura
-ALTER TABLE aapMovilLectura ADD COLUMN direccion VARCHAR(255);
-
 -- Insertar datos en la tabla aapMovilLectura
 INSERT INTO aapMovilLectura (cuenta, medidor, clave, abonado, lectura, observacion, coordenadasXYZ, direccion) VALUES
 ('12345', 'M12345', 'CLAVE123', 'Juan Pérez', '1234', 'Sin novedad', '-0.945758,-78.619934,2850', 'Calle Principal 123'),
