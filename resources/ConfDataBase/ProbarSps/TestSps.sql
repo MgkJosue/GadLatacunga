@@ -10,6 +10,16 @@ SELECT * FROM UsuarioRuta(1);
 SELECT * FROM RutaLecturaMovil(1);
 
 --Probar spSincronizarLecturas
-CALL SincronizarLecturas(
-  '12345', 'MEDIDOR123', 'CLAVE123', 'RUTA1', '500', 'Observación de prueba', 'usuario1', '-78.5243, -0.2293, 1234' 
-);
+-- Probar SincronizarLecturasMasivas
+DO $$
+DECLARE
+    lecturas tipo_lectura[];
+BEGIN
+    lecturas := ARRAY[
+        ROW('12345', 'M12345', 'CLAVE123', '500', 'Observación de prueba 1', '-78.5243, -0.2293, 1234')::tipo_lectura,
+        ROW('67890', 'M67890', 'CLAVE678', '600', 'Observación de prueba 2', '-78.5243, -0.2293, 1234')::tipo_lectura,
+        ROW('54321', 'M54321', 'CLAVE543', '700', 'Observación de prueba 3', '-78.5243, -0.2293, 1234')::tipo_lectura
+    ];
+
+    CALL SincronizarLecturasMasivas(1, lecturas);
+END $$;
