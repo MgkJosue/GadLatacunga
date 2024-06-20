@@ -52,22 +52,26 @@ $$ LANGUAGE plpgsql;
 -- Funcion para obtener informacion de acometidas relacionadas con id del usuario
 CREATE OR REPLACE FUNCTION RutaLecturaMovil(p_idusuario INTEGER)
 RETURNS TABLE (
+    id_usuario INTEGER,
+    id_ruta INTEGER,
     numcuenta VARCHAR(255),
     no_medidor VARCHAR(255),
     clave VARCHAR(255),
     ruta VARCHAR(255),
     direccion VARCHAR(255),
-	abonado VARCHAR(255)
+    abonado VARCHAR(255)
 ) AS $$
 BEGIN
     RETURN QUERY
     SELECT
+        apl.idusuario AS id_usuario,
+        apl.idruta AS id_ruta,
         a.numcuenta,
         a.no_medidor,
         a.clave,
         a.ruta,
         a.direccion,
-		(SELECT ciud.nombrecompleto 
+        (SELECT ciud.nombrecompleto 
          FROM aapplectura aplect
          INNER JOIN ciudadano ciud ON aplect.ciu = ciud.id AND aplect.numcuenta = a.numcuenta
          LIMIT 1) AS abonado
