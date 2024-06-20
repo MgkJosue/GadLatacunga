@@ -11,6 +11,8 @@ class UsuarioRutaResult(BaseModel):
     id_ruta: int
 
 class RutaLecturaMovilResult(BaseModel):
+    id_usuario: int
+    id_ruta: int
     numcuenta: str
     no_medidor: str
     clave: str
