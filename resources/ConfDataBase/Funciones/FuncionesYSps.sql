@@ -82,7 +82,7 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION ObtenerUsuarios()
 RETURNS TABLE (
     id INTEGER,
-    nombre_usuario VARCHAR,
+    nombre_usuario VARCHAR
 ) AS $$
 BEGIN
     RETURN QUERY
@@ -165,4 +165,3 @@ BEGIN
     RAISE NOTICE 'Asignación de ruta eliminada correctamente para el usuario.';
 END;
 $$ LANGUAGE plpgsql;
-
