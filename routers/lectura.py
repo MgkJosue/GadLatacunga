@@ -1,14 +1,17 @@
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, status, Depends
 from sqlalchemy import text, bindparam
 from sqlalchemy.exc import SQLAlchemyError
 from database import database
 from typing import List
 from models import Lectura
+from routers.auth import get_current_user
+
 
 router = APIRouter()
 
+
 @router.post("/sincronizar_lecturas/{usuario_id}")
-async def sincronizar_lecturas(usuario_id: int, lecturas: List[Lectura]):
+async def sincronizar_lecturas(usuario_id: int, lecturas: List[Lectura], current_user: dict = Depends(get_current_user)):
     try:
         # Formatea las lecturas en un formato adecuado para la llamada SQL
         formatted_lecturas = ", ".join(

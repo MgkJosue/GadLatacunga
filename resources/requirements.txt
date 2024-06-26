@@ -5,3 +5,4 @@ databases[postgresql]
 sqlalchemy
 pydantic
 psycopg2
+pyjwt

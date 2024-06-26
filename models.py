@@ -27,3 +27,8 @@ class Lectura(BaseModel):
     lectura: str
     observacion: str
     coordenadas: str
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+    user_id: int
