@@ -19,3 +19,11 @@ class RutaLecturaMovilResult(BaseModel):
     ruta: str
     direccion: str
     abonado: str
+
+class Lectura(BaseModel):
+    numcuenta: str
+    no_medidor: str
+    clave: str
+    lectura: str
+    observacion: str
+    coordenadas: str

@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from database import database
-from routers import auth, usuario, ruta
+from routers import auth, usuario, ruta, lectura
 from sqlalchemy.exc import SQLAlchemyError
 from fastapi.responses import JSONResponse
 
@@ -25,3 +25,4 @@ async def sqlalchemy_exception_handler(request, exc: SQLAlchemyError):
 app.include_router(auth.router)
 app.include_router(usuario.router)
 app.include_router(ruta.router)
+app.include_router(lectura.router)

@@ -1,5 +1,4 @@
 --Funcion para Validar Usuario
-
 CREATE OR REPLACE FUNCTION validar_usuario(
     p_nombre_usuario VARCHAR(255),
     p_contrasena VARCHAR(255)
@@ -46,7 +45,6 @@ BEGIN
   WHERE apl.idusuario = p_idusuario;
 END;
 $$ LANGUAGE plpgsql;
-
 
 
 -- Funcion para obtener informacion de acometidas relacionadas con id del usuario
@@ -110,13 +108,13 @@ END;
 $$ LANGUAGE plpgsql;
 
 
--- Procedimiento para asignar una ruta a un usuario
+-- Procedimiento para asignar o actualizar una ruta a un usuario
 CREATE OR REPLACE PROCEDURE AsignarRutaAUsuario(
     p_user_id INTEGER,
     p_route_id INTEGER
 ) AS $$
 DECLARE
-    existing_user_id INTEGER;
+    existing_record_id INTEGER;
 BEGIN
     -- Verificar si el usuario y la ruta existen
     IF NOT EXISTS (SELECT 1 FROM usuarios WHERE id = p_user_id) THEN
@@ -127,28 +125,31 @@ BEGIN
         RAISE EXCEPTION 'La ruta con ID % no existe', p_route_id;
     END IF;
 
-    -- Verificar si la ruta ya está asignada a otro usuario
-    SELECT idusuario INTO existing_user_id
+    -- Verificar si el usuario ya tiene una ruta asignada
+    SELECT id INTO existing_record_id
     FROM aapplectorruta
-    WHERE idruta = p_route_id;
+    WHERE idusuario = p_user_id;
 
-    IF existing_user_id IS NOT NULL THEN
-        RAISE EXCEPTION 'La ruta con ID % ya está asignada al usuario con ID %', p_route_id, existing_user_id;
+    IF existing_record_id IS NOT NULL THEN
+        -- Actualizar la ruta asignada al usuario
+        UPDATE aapplectorruta
+        SET idruta = p_route_id
+        WHERE id = existing_record_id;
+        RAISE NOTICE 'Ruta actualizada correctamente para el usuario con ID %.', p_user_id;
+    ELSE
+        -- Verificar si la ruta ya está asignada a otro usuario
+        IF EXISTS (SELECT 1 FROM aapplectorruta WHERE idruta = p_route_id) THEN
+            RAISE EXCEPTION 'La ruta con ID % ya está asignada a otro usuario.', p_route_id;
+        END IF;
+        
+        -- Asignar la ruta al usuario
+        INSERT INTO aapplectorruta (idusuario, idruta)
+        VALUES (p_user_id, p_route_id);
+        RAISE NOTICE 'Ruta asignada correctamente al usuario con ID %.', p_user_id;
     END IF;
-
-    -- Verificar si el usuario ya tiene asignada esta ruta (aunque debería ser innecesario si la ruta ya está asignada a otro usuario)
-    IF EXISTS (SELECT 1 FROM aapplectorruta WHERE idusuario = p_user_id AND idruta = p_route_id) THEN
-        RAISE NOTICE 'El usuario ya tiene asignada esta ruta.';
-        RETURN;
-    END IF;
-
-    -- Asignar la ruta al usuario
-    INSERT INTO aapplectorruta (idusuario, idruta)
-    VALUES (p_user_id, p_route_id);
-
-    RAISE NOTICE 'Ruta asignada correctamente al usuario.';
 END;
 $$ LANGUAGE plpgsql;
+
 
 
 -- Procedimiento para eliminar la asignación de ruta a un usuario
