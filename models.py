@@ -32,3 +32,8 @@ class Token(BaseModel):
     access_token: str
     token_type: str
     user_id: int
+
+
+class AsignarRuta(BaseModel):
+    ruta_id: int
+    usuario_id: int

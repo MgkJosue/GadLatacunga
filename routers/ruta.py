@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, status, Depends
 from sqlalchemy import text, bindparam
 from sqlalchemy.exc import SQLAlchemyError
 from database import database
-from models import RutaLecturaMovilResult
+from models import RutaLecturaMovilResult, AsignarRuta
 from routers.auth import get_current_user
 
 router = APIRouter()
@@ -36,25 +36,35 @@ async def obtener_rutas():
         ) from e
 
 @router.post("/asignarRuta/")
-async def asignar_ruta_a_usuario(ruta_id: int, usuario_id: int):
+async def asignar_ruta_a_usuario(asignacion: AsignarRuta):
     try:
-        query = text("CALL AsignarRutaAUsuario(:ruta_id, :usuario_id)").bindparams(
-            bindparam("ruta_id", ruta_id),
-            bindparam("usuario_id", usuario_id)
+        query = text("""
+            SELECT AsignarRutaAUsuario(:usuario_id, :ruta_id) AS mensaje;
+        """).bindparams(
+            bindparam("ruta_id", asignacion.ruta_id),
+            bindparam("usuario_id", asignacion.usuario_id)
         )
-        await database.execute(query)
-        return {"mensaje": "Ruta asignada exitosamente"}
+        
+        result = await database.fetch_one(query)
+        
+        if result:
+            return {"mensaje": result["mensaje"]}
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error al asignar la ruta"
+            )
+
     except SQLAlchemyError as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error en la base de datos"
         ) from e
 
 @router.delete("/eliminarAsignacion/")
-async def eliminar_asignacion_de_ruta(ruta_id: int, usuario_id: int):
+async def eliminar_asignacion_de_ruta(asignacion: AsignarRuta):
     try:
         query = text("CALL EliminarAsignacionDeRuta(:ruta_id, :usuario_id)").bindparams(
-            bindparam("ruta_id", ruta_id),
-            bindparam("usuario_id", usuario_id)
+            bindparam("ruta_id", asignacion.ruta_id),
+            bindparam("usuario_id", asignacion.usuario_id)
         )
         await database.execute(query)
         return {"mensaje": "Asignación eliminada exitosamente"}
