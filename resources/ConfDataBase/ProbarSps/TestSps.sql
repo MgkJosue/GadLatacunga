@@ -35,3 +35,16 @@ SELECT AsignarRutaAUsuario(1, 4);
 
 -- Eliminar la asignación de la ruta con ID 1 al usuario con ID 2
 CALL  EliminarAsignacionDeRuta(1, 2);
+
+
+--Tabalas temporales entre appmovillecturas y tabla lecturas 
+SELECT crear_tablas_temporales();
+
+--Actualizar e insertar lecturas en la tabla aapplectura desde la tabla temporal
+SELECT actualizar_insertar_lecturas();
+
+-- Verificar actualizaciones en aapplectura
+SELECT * FROM aapplectura WHERE numcuenta IN ('12345', '67890');
+
+-- Verificar inserciones en aapplectura
+SELECT * FROM aapplectura WHERE numcuenta = '11111';

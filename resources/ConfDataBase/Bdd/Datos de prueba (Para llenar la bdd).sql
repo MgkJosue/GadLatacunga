@@ -19,7 +19,8 @@ INSERT INTO ciudadano (nombreCompleto) VALUES
 ('Carlos Rodríguez'),
 ('Ana López'),
 ('Luis Martínez'),
-('Laura Sánchez');
+('Laura Sánchez'),
+('Pedro Sánchez');  -- Nuevo ciudadano
 
 -- Insertar datos en la tabla acometidas
 INSERT INTO acometidas (numcuenta, no_medidor, clave, ruta, direccion) VALUES
@@ -28,14 +29,15 @@ INSERT INTO acometidas (numcuenta, no_medidor, clave, ruta, direccion) VALUES
 ('54321', 'M54321', 'CLAVE543', 'Ruta Sur', 'Calle Secundaria 789'),
 ('98765', 'M98765', 'CLAVE987', 'Ruta Sur', 'Avenida Libertad 101'),
 ('24680', 'M24680', 'CLAVE246', 'Ruta Centro', 'Plaza Mayor 222'),
-('13579', 'M13579', 'CLAVE135', 'Ruta Periférica', 'Calle Rural 333');
+('13579', 'M13579', 'CLAVE135', 'Ruta Periférica', 'Calle Rural 333'),
+('11111', 'M11111', 'CLAVE111', 'Ruta Este', 'Calle Nueva 111');  -- Nueva acometida
 
 -- Insertar datos en la tabla aapplectorruta
 INSERT INTO aapplectorruta (idusuario, idruta) VALUES
 (1, 1), -- Lector 1 asignado a Ruta Norte
 (1, 3), -- Lector 1 asignado a Ruta Este
 (2, 2), -- Lector 2 asignado a Ruta Sur
-(2, 4);-- Lector 2 asignado a Ruta Oeste
+(2, 4); -- Lector 2 asignado a Ruta Oeste
 
 -- Insertar datos en la tabla aapMovilLectura
 INSERT INTO aapMovilLectura (cuenta, medidor, clave, abonado, lectura, observacion, coordenadasXYZ, direccion) VALUES
@@ -44,7 +46,10 @@ INSERT INTO aapMovilLectura (cuenta, medidor, clave, abonado, lectura, observaci
 ('54321', 'M54321', 'CLAVE543', 'Carlos Rodríguez', '9012', 'Sin novedad', '-0.945758,-78.619934,2850', 'Calle Secundaria 789'),
 ('98765', 'M98765', 'CLAVE987', 'Ana López', '3456', 'Medidor dañado', '-0.945758,-78.619934,2850', 'Avenida Libertad 101'),
 ('24680', 'M24680', 'CLAVE246', 'Luis Martínez', '7890', 'Sin novedad', '-0.945758,-78.619934,2850', 'Plaza Mayor 222'),
-('13579', 'M13579', 'CLAVE135', 'Laura Sánchez', '2345', 'Sin novedad', '-0.945758,-78.619934,2850', 'Calle Rural 333');
+('13579', 'M13579', 'CLAVE135', 'Laura Sánchez', '2345', 'Sin novedad', '-0.945758,-78.619934,2850', 'Calle Rural 333'),
+('12345', 'M12345', 'CLAVE123', 'Juan Pérez', '1250', 'Lectura actualizada', '-0.945758,-78.619934,2850', 'Calle Principal 123'),
+('67890', 'M67890', 'CLAVE678', 'María Gómez', '5700', 'Lectura actualizada', '-0.945758,-78.619934,2850', 'Avenida Central 456'),
+('11111', 'M11111', 'CLAVE111', 'Pedro Sánchez', '1000', 'Nueva lectura', '-0.945758,-78.619934,2850', 'Calle Nueva 111');  -- Nueva cuenta
 
 -- Insertar datos en la tabla aapplectura
 INSERT INTO aapplectura (id, numcuenta, anio, mes, lectura, observacion, lecturaanterior, consumo, nromedidor, ciu) VALUES
