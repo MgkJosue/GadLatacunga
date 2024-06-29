@@ -23,9 +23,8 @@ async def obtener_ruta_lectura(usuario_id: int, current_user: dict = Depends(get
         ) from e 
 
 
-#SEGURIDAD AUN NO IMPLEMENTADA
 @router.get("/obtenerRutas/")
-async def obtener_rutas():
+async def obtener_rutas(current_user: dict = Depends(get_current_user)):
     try:
         query = text("SELECT * FROM ObtenerRutas()")
         result = await database.fetch_all(query)
@@ -36,7 +35,7 @@ async def obtener_rutas():
         ) from e
 
 @router.post("/asignarRuta/")
-async def asignar_ruta_a_usuario(asignacion: AsignarRuta):
+async def asignar_ruta_a_usuario(asignacion: AsignarRuta, current_user: dict = Depends(get_current_user)):
     try:
         query = text("""
             SELECT AsignarRutaAUsuario(:usuario_id, :ruta_id) AS mensaje;
@@ -60,13 +59,13 @@ async def asignar_ruta_a_usuario(asignacion: AsignarRuta):
         ) from e
     
 @router.get("/lectorruta")
-async def obtener_lectorruta():
+async def obtener_lectorruta(current_user: dict = Depends(get_current_user)):
     query = "SELECT * FROM obtener_datos_lectorruta();"
     results = await database.fetch_all(query)
     return results
 
 @router.delete("/lectorruta/{id}")
-async def eliminar_lectorruta(id: int):
+async def eliminar_lectorruta(id: int, current_user: dict = Depends(get_current_user)):
     try:
         query = f"SELECT eliminar_lectorruta({id});"
         await database.execute(query)

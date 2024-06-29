@@ -52,6 +52,5 @@ BEGIN
         (SELECT ci.id FROM ciudadano ci WHERE ci.nombrecompleto = tmp.abonado) -- Obtener el id del ciudadano
     FROM temp_insertar tmp;
 
-    -- Si tienes reglas adicionales para 'lecturaanterior' y 'consumo', puedes ajustarlas aquí.
 END;
 $$ LANGUAGE plpgsql;

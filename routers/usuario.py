@@ -21,11 +21,9 @@ async def obtener_ruta_usuario(usuario_id: int, current_user: dict = Depends(get
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error en la base de datos"
         ) from e
-
-
-#SEGURIDAD AUN NO IMPLEMENTADA
+    
 @router.get("/obtenerUsuarios/")
-async def obtener_usuarios():
+async def obtener_usuarios(current_user: dict = Depends(get_current_user)):
     try:
         query = text("SELECT * FROM ObtenerUsuarios()")
         result = await database.fetch_all(query)
