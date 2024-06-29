@@ -11,7 +11,7 @@ BEGIN
     -- Obtener la contraseña y el ID del usuario
     SELECT contrasena, id INTO v_contrasena_almacenada, v_usuario_id
     FROM usuarios
-    WHERE nombre_usuario = p_nombre_usuario;
+    WHERE nombre_usuario = p_nombre_usuaraio;
 
     IF v_contrasena_almacenada IS NULL THEN
         RETURN (FALSE, NULL);    -- Devolvemos FALSE y un ID nulo si no se encuentra el usuario
@@ -163,26 +163,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-
--- Procedimiento para eliminar la asignación de ruta a un usuario
-CREATE OR REPLACE PROCEDURE EliminarAsignacionDeRuta(
-    p_user_id INTEGER,
-    p_route_id INTEGER
-) AS $$
-BEGIN
-    -- Verificar si la asignación existe
-    IF NOT EXISTS (SELECT 1 FROM aapplectorruta WHERE idusuario = p_user_id AND idruta = p_route_id) THEN
-        RAISE EXCEPTION 'La asignación entre el usuario con ID % y la ruta con ID % no existe', p_user_id, p_route_id;
-    END IF;
-
-    -- Eliminar la asignación de ruta para el usuario
-    DELETE FROM aapplectorruta
-    WHERE idusuario = p_user_id AND idruta = p_route_id;
-
-    RAISE NOTICE 'Asignación de ruta eliminada correctamente para el usuario.';
-END;
-$$ LANGUAGE plpgsql;
-
 -- Funcion para obtener informacion de acometidas relacionadas con id del usuario
 CREATE OR REPLACE FUNCTION RutaLecturaMovil(p_idusuario INTEGER)
 RETURNS TABLE (
@@ -261,5 +241,46 @@ BEGIN
   INNER JOIN aappruta ap ON apl.idruta = ap.id
   INNER JOIN usuarios usu ON apl.idusuario = usu.id
   WHERE apl.idusuario = p_idusuario;
+END;
+$$ LANGUAGE plpgsql;
+
+
+--Funcion para obtener los datos de la tabla aapplectorruta junto con el nombre de usuario y el nombre de la ruta
+CREATE OR REPLACE FUNCTION obtener_datos_lectorruta()
+RETURNS TABLE(
+    id_lectorruta INT,
+    id_usuario INT,
+    nombre_usuario VARCHAR,
+    id_ruta INT,
+    nombre_ruta VARCHAR
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        alr.id AS id_lectorruta,
+        u.id AS id_usuario,
+        u.nombre_usuario,
+        ar.id AS id_ruta,
+        ar.nombreruta AS nombre_ruta
+    FROM 
+        aapplectorruta alr
+    JOIN 
+        usuarios u ON alr.idusuario = u.id
+    JOIN 
+        aappruta ar ON alr.idruta = ar.id;
+END;
+$$ LANGUAGE plpgsql;
+
+
+--Funcion para eliminar la asignación de la ruta dado el id de aapplectorruta
+CREATE OR REPLACE FUNCTION eliminar_lectorruta(id_lectorruta INT)
+RETURNS VOID AS $$
+BEGIN
+    DELETE FROM aapplectorruta
+    WHERE id = id_lectorruta;
+    
+    IF NOT FOUND THEN
+        RAISE EXCEPTION 'No se encontró la ruta con ID %', id_lectorruta;
+    END IF;
 END;
 $$ LANGUAGE plpgsql;

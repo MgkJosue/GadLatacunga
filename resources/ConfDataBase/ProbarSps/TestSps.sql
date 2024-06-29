@@ -48,3 +48,10 @@ SELECT * FROM aapplectura WHERE numcuenta IN ('12345', '67890');
 
 -- Verificar inserciones en aapplectura
 SELECT * FROM aapplectura WHERE numcuenta = '11111';
+
+--Obtener los datos de la tabla aapplectorruta junto con el nombre de usuario y el nombre de la ruta
+SELECT * FROM obtener_datos_lectorruta();
+
+--Eliminar la asignación de la ruta con ID 1 a la tabla aapplectorruta
+SELECT eliminar_lectorruta(1);
+

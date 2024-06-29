@@ -58,17 +58,18 @@ async def asignar_ruta_a_usuario(asignacion: AsignarRuta):
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error en la base de datos"
         ) from e
+    
+@router.get("/lectorruta")
+async def obtener_lectorruta():
+    query = "SELECT * FROM obtener_datos_lectorruta();"
+    results = await database.fetch_all(query)
+    return results
 
-@router.delete("/eliminarAsignacion/")
-async def eliminar_asignacion_de_ruta(asignacion: AsignarRuta):
+@router.delete("/lectorruta/{id}")
+async def eliminar_lectorruta(id: int):
     try:
-        query = text("CALL EliminarAsignacionDeRuta(:ruta_id, :usuario_id)").bindparams(
-            bindparam("ruta_id", asignacion.ruta_id),
-            bindparam("usuario_id", asignacion.usuario_id)
-        )
+        query = f"SELECT eliminar_lectorruta({id});"
         await database.execute(query)
-        return {"mensaje": "Asignación eliminada exitosamente"}
-    except SQLAlchemyError as e:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error en la base de datos"
-        ) from e
+        return {"message": f"Lectorruta con ID {id} eliminada"}
+    except Exception as e:
+        raise HTTPException(status_code=404, detail=str(e))
