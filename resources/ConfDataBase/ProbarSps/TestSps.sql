@@ -16,13 +16,19 @@ DECLARE
     lecturas tipo_lectura[];
 BEGIN
     lecturas := ARRAY[
-        ROW('12345', 'M12345', 'CLAVE123', '500', 'Observación de prueba 1', '-78.5243, -0.2293, 1234')::tipo_lectura,
-        ROW('67890', 'M67890', 'CLAVE678', '600', 'Observación de prueba 2', '-78.5243, -0.2293, 1234')::tipo_lectura,
-        ROW('54321', 'M54321', 'CLAVE543', '700', 'Observación de prueba 3', '-78.5243, -0.2293, 1234')::tipo_lectura
+        -- Caso sin motivo e imagen (dejar NULL)
+        ROW('12345', 'M12345', 'CLAVE123', '500', 'Observación de prueba 1', '-78.5243, -0.2293, 1234', NULL, NULL)::tipo_lectura,
+        
+        -- Caso con motivo y sin imagen
+        ROW('67890', 'M67890', 'CLAVE678', '600', 'Observación de prueba 2', '-78.5243, -0.2293, 1234', 'Motivo de prueba 1', NULL)::tipo_lectura
+        
+        -- Caso con motivo e imagen (proporciona una imagen en formato binario)
+      --  ROW('54321', 'M54321', 'CLAVE543', '700', 'Observación de prueba 3', '-78.5243, -0.2293, 1234', 'Motivo de prueba 2', pg_read_binary_file('/ruta/a/la/imagen.png'))::tipo_lectura
     ];
 
     CALL SincronizarLecturasMasivas(1, lecturas);
 END $$;
+
 
 --Funcion para obtenerUsuarios
 SELECT * FROM ObtenerUsuarios();
@@ -55,3 +61,5 @@ SELECT * FROM obtener_datos_lectorruta();
 --Eliminar la asignación de la ruta con ID 1 a la tabla aapplectorruta
 SELECT eliminar_lectorruta(1);
 
+--Obtener los datos de la ID Lector Ruta 1
+SELECT * FROM  obtener_lectorruta(1);

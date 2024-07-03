@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import Optional
 
 class LoginCredentials(BaseModel):
     nombre_usuario: str
@@ -27,6 +28,8 @@ class Lectura(BaseModel):
     lectura: str
     observacion: str
     coordenadas: str
+    motivo: Optional[str] = None
+    imagen: Optional[bytes] = None
 
 class Token(BaseModel):
     access_token: str
@@ -37,3 +40,11 @@ class Token(BaseModel):
 class AsignarRuta(BaseModel):
     ruta_id: int
     usuario_id: int
+
+
+class LectorRutaDetail(BaseModel):
+    id: int
+    idusuario: int
+    idruta: int
+    nombre_usuario: str
+    nombre_ruta: str

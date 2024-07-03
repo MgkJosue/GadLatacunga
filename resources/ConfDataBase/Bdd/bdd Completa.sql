@@ -48,7 +48,7 @@ CREATE TABLE aapplectura (
     ciu INTEGER NOT NULL
 );
 
--- Crear la tabla aapMovilLectura
+-- Crear la tabla aapMovilLectura con las nuevas columnas
 CREATE TABLE aapMovilLectura (
     id SERIAL PRIMARY KEY,
     cuenta VARCHAR(20),
@@ -58,5 +58,7 @@ CREATE TABLE aapMovilLectura (
     lectura VARCHAR(10),
     observacion TEXT,
     coordenadasXYZ VARCHAR(50),
-    direccion VARCHAR(255)
+    direccion VARCHAR(255),
+    motivo TEXT,
+    imagen BYTEA
 );

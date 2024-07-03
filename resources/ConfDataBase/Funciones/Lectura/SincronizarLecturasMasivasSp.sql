@@ -1,12 +1,19 @@
+-- Eliminar el tipo compuesto si ya existe
+DROP TYPE IF EXISTS tipo_lectura;
+
+-- Crear el tipo compuesto tipo_lectura con las nuevas columnas
 CREATE TYPE tipo_lectura AS (
     numcuenta VARCHAR(255),
     no_medidor VARCHAR(255),
     clave VARCHAR(255),
     lectura VARCHAR(10),
     observacion TEXT,
-    coordenadasXYZ TEXT
+    coordenadasXYZ TEXT,
+    motivo TEXT,   -- Nueva columna para motivo
+    imagen BYTEA   -- Nueva columna para imagen
 );
 
+-- Modificar el procedimiento almacenado SincronizarLecturasMasivas
 CREATE OR REPLACE PROCEDURE SincronizarLecturasMasivas(
     p_idusuario INTEGER,
     p_lecturas tipo_lectura[]
@@ -70,14 +77,16 @@ BEGIN
             UPDATE aapMovilLectura
             SET lectura = v_lectura.lectura,
                 observacion = v_lectura.observacion,
-                coordenadasXYZ = v_lectura.coordenadasXYZ
+                coordenadasXYZ = v_lectura.coordenadasXYZ,
+                motivo = COALESCE(v_lectura.motivo, motivo),
+                imagen = COALESCE(v_lectura.imagen, imagen)
             WHERE cuenta = v_lectura.numcuenta
               AND EXTRACT(YEAR FROM CURRENT_DATE) = v_anio
               AND EXTRACT(MONTH FROM CURRENT_DATE) = v_mes;
         ELSE
             -- Insertar una nueva lectura (manteniendo la dirección y abonado)
-            INSERT INTO aapMovilLectura (cuenta, medidor, clave, abonado, lectura, observacion, coordenadasXYZ, direccion)
-            VALUES (v_lectura.numcuenta, v_lectura.no_medidor, v_lectura.clave, v_abonado, v_lectura.lectura, v_lectura.observacion, v_lectura.coordenadasXYZ, v_direccion);
+            INSERT INTO aapMovilLectura (cuenta, medidor, clave, abonado, lectura, observacion, coordenadasXYZ, direccion, motivo, imagen)
+            VALUES (v_lectura.numcuenta, v_lectura.no_medidor, v_lectura.clave, v_abonado, v_lectura.lectura, v_lectura.observacion, v_lectura.coordenadasXYZ, v_direccion, v_lectura.motivo, v_lectura.imagen);
         END IF;
     END LOOP;
 END;
