@@ -48,3 +48,7 @@ class LectorRutaDetail(BaseModel):
     idruta: int
     nombre_usuario: str
     nombre_ruta: str
+
+class ActualizarLectorRuta(BaseModel):
+    usuario_id: int
+    ruta_id: int

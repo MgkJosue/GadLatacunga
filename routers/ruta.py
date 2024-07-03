@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, status, Depends
 from sqlalchemy import text, bindparam
 from sqlalchemy.exc import SQLAlchemyError
 from database import database
-from models import RutaLecturaMovilResult, AsignarRuta, LectorRutaDetail
+from models import RutaLecturaMovilResult, AsignarRuta, LectorRutaDetail, ActualizarLectorRuta
 from routers.auth import get_current_user
 
 router = APIRouter()
@@ -90,6 +90,30 @@ async def get_lectorruta(id: int, current_user: dict = Depends(get_current_user)
             nombre_usuario=result["nombre_usuario"],
             nombre_ruta=result["nombre_ruta"]
         )
+    except SQLAlchemyError as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error en la base de datos"
+        ) from e
+
+@router.put("/lectorruta/{id}", response_model=dict)
+async def actualizar_lectorruta(id: int, detalles: ActualizarLectorRuta, current_user: dict = Depends(get_current_user)):
+    try:
+        query = text("""
+            SELECT ActualizarLectorRuta(:id, :usuario_id, :ruta_id) AS mensaje;
+        """).bindparams(
+            bindparam("id", id),
+            bindparam("usuario_id", detalles.usuario_id),
+            bindparam("ruta_id", detalles.ruta_id)
+        )
+        
+        result = await database.fetch_one(query)
+        
+        if result:
+            return {"mensaje": result["mensaje"]}
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error al actualizar el lector-ruta"
+            )
     except SQLAlchemyError as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error en la base de datos"
