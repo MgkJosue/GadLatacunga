@@ -39,10 +39,19 @@ SELECT * FROM ObtenerRutas();
 -- Asignar la ruta con ID 1 al usuario con ID 5
 SELECT AsignarRutaAUsuario(1, 4);
 
--- Eliminar la asignación de la ruta con ID 1 al usuario con ID 2
-CALL  EliminarAsignacionDeRuta(1, 2);
+
+--Obtener los datos de la tabla aapplectorruta junto con el nombre de usuario y el nombre de la ruta
+SELECT * FROM obtener_datos_lectorruta();
+
+--Eliminar la asignación de la ruta con ID 1 a la tabla aapplectorruta
+SELECT eliminar_lectorruta(1);
+
+--Obtener los datos de la ID Lector Ruta 1
+SELECT * FROM  obtener_lectorruta(1);
 
 
+
+--AUN NO IMPLEMENTADO 
 --Tabalas temporales entre appmovillecturas y tabla lecturas 
 SELECT crear_tablas_temporales();
 
@@ -54,12 +63,3 @@ SELECT * FROM aapplectura WHERE numcuenta IN ('12345', '67890');
 
 -- Verificar inserciones en aapplectura
 SELECT * FROM aapplectura WHERE numcuenta = '11111';
-
---Obtener los datos de la tabla aapplectorruta junto con el nombre de usuario y el nombre de la ruta
-SELECT * FROM obtener_datos_lectorruta();
-
---Eliminar la asignación de la ruta con ID 1 a la tabla aapplectorruta
-SELECT eliminar_lectorruta(1);
-
---Obtener los datos de la ID Lector Ruta 1
-SELECT * FROM  obtener_lectorruta(1);
