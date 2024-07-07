@@ -64,3 +64,7 @@ SELECT * FROM aapplectura WHERE numcuenta IN ('12345', '67890');
 
 -- Verificar inserciones en aapplectura
 SELECT * FROM aapplectura WHERE numcuenta = '11111';
+
+-- Para ejecutar el procedimiento almacenado
+SELECT copiar_registros_a_evidencia();
+

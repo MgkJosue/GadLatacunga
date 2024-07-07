@@ -62,3 +62,19 @@ CREATE TABLE aapMovilLectura (
     motivo TEXT,
     imagen BYTEA
 );
+
+-- Crear la tabla aapEvidencia para la actualización de los datos de la tabla aapMovilLectura
+CREATE TABLE aapEvidencia (
+    id SERIAL PRIMARY KEY,
+    cuenta VARCHAR(20),
+    medidor VARCHAR(20),
+    clave VARCHAR(20),
+    abonado VARCHAR(100),
+    lectura VARCHAR(10),
+    observacion TEXT,
+    coordenadasXYZ VARCHAR(50),
+    direccion VARCHAR(255),
+    motivo TEXT,
+    imagen BYTEA,
+    CONSTRAINT unique_cuenta_medidor UNIQUE (cuenta, medidor)
+);

@@ -49,3 +49,15 @@ async def sincronizar_lecturas(usuario_id: int, lecturas: List[Lectura], current
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error en la base de datos"
         ) from e
+
+
+@router.post("/copiar_evidencia")
+async def copiar_evidencia(current_user: dict = Depends(get_current_user)):
+    try:
+        query = text("SELECT copiar_registros_a_evidencia();")
+        await database.execute(query)
+        return {"mensaje": "Registros copiados a aapEvidencia exitosamente"}
+    except SQLAlchemyError as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error en la base de datos"
+        ) from e
