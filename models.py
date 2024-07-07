@@ -29,7 +29,7 @@ class Lectura(BaseModel):
     observacion: str
     coordenadas: str
     motivo: Optional[str] = None
-    imagen: Optional[bytes] = None
+    imagen_ruta: Optional[str] = None
 
 class Token(BaseModel):
     access_token: str

@@ -23,6 +23,7 @@ BEGIN
         ROW('67890', 'M67890', 'CLAVE678', '600', 'Observación de prueba 2', '-78.5243, -0.2293, 1234', 'Motivo de prueba 1', NULL)::tipo_lectura
         
         -- Caso con motivo e imagen (proporciona una imagen en formato binario)
+        --GRANT EXECUTE ON FUNCTION pg_read_binary_file TO tu_usuario;
       --  ROW('54321', 'M54321', 'CLAVE543', '700', 'Observación de prueba 3', '-78.5243, -0.2293, 1234', 'Motivo de prueba 2', pg_read_binary_file('/ruta/a/la/imagen.png'))::tipo_lectura
     ];
 

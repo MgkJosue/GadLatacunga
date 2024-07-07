@@ -47,8 +47,6 @@ INSERT INTO aapMovilLectura (cuenta, medidor, clave, abonado, lectura, observaci
 ('98765', 'M98765', 'CLAVE987', 'Ana López', '3456', 'Medidor dañado', '-0.945758,-78.619934,2850', 'Avenida Libertad 101'),
 ('24680', 'M24680', 'CLAVE246', 'Luis Martínez', '7890', 'Sin novedad', '-0.945758,-78.619934,2850', 'Plaza Mayor 222'),
 ('13579', 'M13579', 'CLAVE135', 'Laura Sánchez', '2345', 'Sin novedad', '-0.945758,-78.619934,2850', 'Calle Rural 333'),
-('12345', 'M12345', 'CLAVE123', 'Juan Pérez', '1250', 'Lectura actualizada', '-0.945758,-78.619934,2850', 'Calle Principal 123'),
-('67890', 'M67890', 'CLAVE678', 'María Gómez', '5700', 'Lectura actualizada', '-0.945758,-78.619934,2850', 'Avenida Central 456'),
 ('11111', 'M11111', 'CLAVE111', 'Pedro Sánchez', '1000', 'Nueva lectura', '-0.945758,-78.619934,2850', 'Calle Nueva 111');  -- Nueva cuenta
 
 -- Insertar datos en la tabla aapplectura
