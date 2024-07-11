@@ -292,15 +292,22 @@ BEGIN
         a.clave,
         a.ruta,
         a.direccion,
-        (SELECT ciud.nombrecompleto 
-         FROM aapplectura aplect
-         INNER JOIN ciudadano ciud ON aplect.ciu = ciud.id AND aplect.numcuenta = a.numcuenta
-         LIMIT 1) AS abonado
+        COALESCE(
+            (SELECT ciud.nombrecompleto 
+             FROM aapplectura aplect
+             INNER JOIN ciudadano ciud ON aplect.ciu = ciud.id AND aplect.numcuenta = a.numcuenta
+             LIMIT 1),
+            (SELECT appmov.abonado 
+             FROM public.aapmovillectura appmov
+             WHERE appmov.cuenta = a.numcuenta
+             LIMIT 1)
+        ) AS abonado
     FROM acometidas a
     INNER JOIN aapplectorruta apl ON a.ruta = (SELECT nombreruta FROM aappruta WHERE id = apl.idruta)
     WHERE apl.idusuario = p_idusuario; 
 END;
 $$ LANGUAGE plpgsql;
+
 
 CREATE OR REPLACE FUNCTION obtener_datos_lectorruta()
 RETURNS TABLE(
