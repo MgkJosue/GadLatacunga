@@ -25,10 +25,10 @@ class Lectura(BaseModel):
     numcuenta: str
     no_medidor: str
     clave: str
-    lectura: str
+    lectura: Optional[str] = None 
     observacion: str
     coordenadas: str
-    motivo: Optional[str] = None
+    motivo: Optional[str] = None 
     imagen_ruta: Optional[str] = None
 
 class Token(BaseModel):
