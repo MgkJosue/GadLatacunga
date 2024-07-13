@@ -51,6 +51,10 @@ SELECT eliminar_lectorruta(1);
 SELECT * FROM  obtener_lectorruta(1);
 
 
+-- Para ejecutar el procedimiento almacenado
+SELECT copiar_registros_a_evidencia();
+
+
 
 --AUN NO IMPLEMENTADO 
 --Tabalas temporales entre appmovillecturas y tabla lecturas 
@@ -65,6 +69,4 @@ SELECT * FROM aapplectura WHERE numcuenta IN ('12345', '67890');
 -- Verificar inserciones en aapplectura
 SELECT * FROM aapplectura WHERE numcuenta = '11111';
 
--- Para ejecutar el procedimiento almacenado
-SELECT copiar_registros_a_evidencia();
 

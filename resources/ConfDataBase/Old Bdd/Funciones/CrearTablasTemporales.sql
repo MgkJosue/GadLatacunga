@@ -19,7 +19,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-
+-- Actualizar e insertar lecturas en la tabla aapplectura desde las tablas temporales
 CREATE OR REPLACE FUNCTION actualizar_insertar_lecturas()
 RETURNS void AS $$
 DECLARE
@@ -31,35 +31,10 @@ BEGIN
         lectura = tmp.lectura::INTEGER,
         observacion = tmp.observacion,
         nromedidor = tmp.medidor,
-        lecturaanterior = COALESCE(
-            (SELECT al2.lectura
-             FROM aapplectura al2
-             WHERE al2.numcuenta = al.numcuenta
-               AND al2.anio = al.anio
-               AND al2.mes = (
-                   SELECT MAX(al3.mes)
-                   FROM aapplectura al3
-                   WHERE al3.numcuenta = al.numcuenta
-                     AND al3.anio = al.anio
-                     AND al3.mes < al.mes
-               )), al.lecturaanterior
-        ),
-        consumo = tmp.lectura::INTEGER - COALESCE(
-            (SELECT al2.lectura
-             FROM aapplectura al2
-             WHERE al2.numcuenta = al.numcuenta
-               AND al2.anio = al.anio
-               AND al2.mes = (
-                   SELECT MAX(al3.mes)
-                   FROM aapplectura al3
-                   WHERE al3.numcuenta = al.numcuenta
-                     AND al3.anio = al.anio
-                     AND al3.mes < al.mes
-               )), 0
-        )
+        lecturaanterior = COALESCE(al.lecturaanterior, tmp.lectura::INTEGER),
+        consumo = tmp.lectura::INTEGER - COALESCE(al.lecturaanterior, 0)
     FROM temp_actualizar tmp
     WHERE al.numcuenta = tmp.cuenta 
-      AND EXTRACT(YEAR FROM CURRENT_DATE) = al.anio
       AND EXTRACT(MONTH FROM CURRENT_DATE) = al.mes;
 
     -- Ajustar la secuencia del id para evitar duplicados
@@ -77,30 +52,14 @@ BEGIN
         tmp.lectura::INTEGER,
         tmp.observacion,
         COALESCE(
-            (SELECT al.lectura
-             FROM aapplectura al 
+            (SELECT al.lectura FROM aapplectura al 
              WHERE al.numcuenta = tmp.cuenta 
-               AND al.anio = EXTRACT(YEAR FROM CURRENT_DATE)
-               AND al.mes = (
-                   SELECT MAX(al2.mes)
-                   FROM aapplectura al2
-                   WHERE al2.numcuenta = tmp.cuenta
-                     AND al2.anio = EXTRACT(YEAR FROM CURRENT_DATE)
-                     AND al2.mes < EXTRACT(MONTH FROM CURRENT_DATE)
-               )), 0
+             AND EXTRACT(MONTH FROM CURRENT_DATE) - 1 = al.mes), 0
         ) AS lecturaanterior,
         tmp.lectura::INTEGER - COALESCE(
-            (SELECT al.lectura
-             FROM aapplectura al 
+            (SELECT al.lectura FROM aapplectura al 
              WHERE al.numcuenta = tmp.cuenta 
-               AND al.anio = EXTRACT(YEAR FROM CURRENT_DATE)
-               AND al.mes = (
-                   SELECT MAX(al2.mes)
-                   FROM aapplectura al2
-                   WHERE al2.numcuenta = tmp.cuenta
-                     AND al2.anio = EXTRACT(YEAR FROM CURRENT_DATE)
-                     AND al2.mes < EXTRACT(MONTH FROM CURRENT_DATE)
-               )), 0
+             AND EXTRACT(MONTH FROM CURRENT_DATE) - 1 = al.mes), 0
         ) AS consumo,
         tmp.medidor,
         (SELECT ci.id FROM ciudadano ci WHERE ci.nombreCompleto = tmp.abonado) -- Obtener el id del ciudadano
